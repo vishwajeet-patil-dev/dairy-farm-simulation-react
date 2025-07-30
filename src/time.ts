@@ -3,24 +3,21 @@ import { GAME_START_DATE } from "./utils/constants";
 
 export default function useTime() {
   function computeGameTime(): Date {
-    let startRealTimestamp = localStorage.getItem("startRealTimestamp");
-    if (!startRealTimestamp) {
-      startRealTimestamp = Date.now().toString();
-      localStorage.setItem("startRealTimestamp", startRealTimestamp);
+    let elapsedRealSeconds = localStorage.getItem("elapsedRealSeconds");
+    if (!elapsedRealSeconds) {
+      elapsedRealSeconds = "0";
+      localStorage.setItem("elapsedRealSeconds", elapsedRealSeconds);
     }
-    const now = Date.now();
-    const elapsedRealSeconds = Math.floor(
-      (now - Number(startRealTimestamp)) / 1000
-    );
-    const elapsedGameMinutes = elapsedRealSeconds;
+    const elapsedGameMinutes = Number(elapsedRealSeconds);
     return new Date(GAME_START_DATE.getTime() + elapsedGameMinutes * 60 * 1000);
   }
-  const [gameTime, setGameTime] = useState<Date>(computeGameTime);
+  const [gameTime, setGameTime] = useState<Date>(computeGameTime());
   useEffect(() => {
     const interval = setInterval(() => {
       setGameTime(computeGameTime());
+      const temp = Number(localStorage.getItem("elapsedRealSeconds")) + 1;
+      localStorage.setItem("elapsedRealSeconds", temp.toString());
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
