@@ -1,9 +1,6 @@
-import { updateCows } from "./cow";
+import useCows from "../hooks/use-cows";
 
-export default function mainEngine() {
-  console.log("main engine is running");
-  updateCows();
-}
+export default function mainEngine() {}
 setInterval(() => {
   mainEngine();
 }, 1000);
